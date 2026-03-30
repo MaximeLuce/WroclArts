@@ -16,6 +16,7 @@ Main modified files:
 - `src/main/ressources/openapi/openapi.yaml` for OpenAPI documentation
 
 ## To-Do
+Questions: admins specific endpoint or just in security?
 
 ## History of the Laboratory
 
