@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.NativeWebRequest;
-
 import pl.edu.pwr.tkubik.ism.model.Event;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,13 +23,12 @@ public class EventsController implements EventApi {
         return Optional.ofNullable(nativeWebRequest);
     }
 
+    // adding parameters inside the signature
     @Override
-    public ResponseEntity<List<Event>> findAllEvents() {
+    public ResponseEntity<List<Event>> findAllEvents(Double lat, Double lng, Integer radius, String category, String keyword, LocalDate date) {
         if (getRequest().isPresent()) {
-            // creation of an event list
             List<Event> eventsList = new ArrayList<>();
 
-            // fake data put in memory
             Event e1 = new Event();
             e1.setEventId(1L);
             e1.setTitle("Pottery Workshop");
@@ -43,6 +42,6 @@ public class EventsController implements EventApi {
             return new ResponseEntity<>(eventsList, HttpStatus.OK);
         }
 
-        return EventApi.super.findAllEvents();
+        return EventApi.super.findAllEvents(lat, lng, radius, category, keyword, date);
     }
 }
