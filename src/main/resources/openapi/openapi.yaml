@@ -281,6 +281,35 @@ paths:
         - wroclarts_auth:
             - write:events
 
+  /events/{eventId}/organizations/{orgId}:
+    post:
+      tags:
+        - event
+      summary: Add an organization to an existing event (Co-host)
+      operationId: addOrganizationToEvent
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Organization successfully added to the event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          description: Event or Organization not found
+
   /events/{eventId}/tickets:
     post:
       tags:
@@ -986,6 +1015,7 @@ components:
       required:
         - title
         - date
+        - organizationsId
       type: object
       xml:
         name: Event
@@ -998,10 +1028,10 @@ components:
           example: Pottery Workshop
         date:
           type: string
-          example: 2026-10-14
+          example: "2026-10-14"
         time:
           type: string
-          example: 18:00
+          example: "18:00"
         address:
           type: string
           example: Nadodrze
@@ -1048,6 +1078,7 @@ components:
       required:
         - email
         - krsNumber
+        - nameOrga
       type: object
       xml:
         name: Organization
@@ -1058,9 +1089,16 @@ components:
         email:
           type: string
           example: contact@ceramicstudio.pl
+        nameOrga:
+          type: string
+          example: Ceramic Studio Wrocław
         krsNumber:
           type: string
-          example: 0000123456
+          example: "0000123456"
+        subscriptionDate:
+          type: string
+          format: date
+          example: "2026-04-10"
         status:
           type: string
           example: PendingVerification
