@@ -7,7 +7,9 @@ WrocłArts is a web-based system designed to manage any artistic activity in Wro
 2) Use `mvn clean compile`
 3) Launch the project
 4) Visit http://localhost:8080/WroclArts/swagger-ui/index.html to explore OpenAPI definition
-5) Visit http://localhost:8080/WroclArts/h2-ui to explore the database
+5) Visit http://localhost:8080/WroclArts/h2-ui/ to explore the database
+  - username: `sa`
+  - password: (none)
 
 ## Structure
 
@@ -29,6 +31,6 @@ Questions: admins specific endpoint or just in security?
 - **Lab03:**
   1) Adding api, model, repository, service
   2) Updating the YAML
-  3) Testing many-to-many using H2-Console (eventRegistration, eventCreation)
-  4) Uploading the Documentation `Documentation/X.pdf` (TO-DO)
+  3) Testing many-to-many using H2-Console (eventRegistration, eventCreation, ...)
+  4) Uploading the Documentation `Documentation/DataStorageStructure_lab03.pdf`
 
