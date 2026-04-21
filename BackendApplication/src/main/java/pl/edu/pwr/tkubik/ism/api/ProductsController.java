@@ -1,5 +1,8 @@
 package pl.edu.pwr.tkubik.ism.api;
 
+import pl.edu.pwr.tkubik.ism.aspect.LogExecutionTime;
+import pl.edu.pwr.tkubik.ism.aspect.LogMethod;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +21,15 @@ public class ProductsController implements ProductApi {
     private NativeWebRequest nativeWebRequest = null;
 
     @Override
+    @LogMethod
+    @LogExecutionTime
     public Optional<NativeWebRequest> getRequest() {
         return Optional.ofNullable(nativeWebRequest);
     }
 
     @Override
+    @LogMethod
+    @LogExecutionTime
     public ResponseEntity<List<Product>> findAllProducts() {
         List<Product> products = new ArrayList<>();
 
@@ -39,6 +46,8 @@ public class ProductsController implements ProductApi {
     }
 
     @Override
+    @LogMethod
+    @LogExecutionTime
     public ResponseEntity<Product> addProduct(Product product) {
         product.setProductId(101L);
         product.setStatus("Active");
@@ -48,6 +57,8 @@ public class ProductsController implements ProductApi {
     }
 
     @Override
+    @LogMethod
+    @LogExecutionTime
     public ResponseEntity<Product> findProductById(Long productId) {
         Product p = new Product();
         p.setProductId(productId);

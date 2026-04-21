@@ -1,5 +1,8 @@
 package pl.edu.pwr.tkubik.ism.api;
 
+import pl.edu.pwr.tkubik.ism.aspect.LogExecutionTime;
+import pl.edu.pwr.tkubik.ism.aspect.LogMethod;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

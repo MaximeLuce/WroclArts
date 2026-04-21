@@ -1,5 +1,8 @@
 package pl.edu.pwr.tkubik.ism.api;
 
+import pl.edu.pwr.tkubik.ism.aspect.LogExecutionTime;
+import pl.edu.pwr.tkubik.ism.aspect.LogMethod;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +34,8 @@ public class OrganizationsController implements OrganizationApi {
     }
 
     // POST /organizations
+    @LogMethod
+    @LogExecutionTime
     @Override
     public ResponseEntity<Organization> addOrganization(Organization organizationDto) {
         // we instance the entity
@@ -54,6 +59,8 @@ public class OrganizationsController implements OrganizationApi {
     }
 
     // GET /organizations
+    @LogMethod
+    @LogExecutionTime
     @Override
     public ResponseEntity<List<Organization>> findAllOrganizations() {
         // get all entities from the database
@@ -67,6 +74,8 @@ public class OrganizationsController implements OrganizationApi {
     }
 
     // GET /organizations/{orgId}
+    @LogMethod
+    @LogExecutionTime
     @Override
     public ResponseEntity<Organization> findOrganizationById(Long orgId) {
         // find the entity
@@ -82,6 +91,8 @@ public class OrganizationsController implements OrganizationApi {
     }
 
     // PUT /organizations/{orgId}
+    @LogMethod
+    @LogExecutionTime
     @Override
     public ResponseEntity<Organization> updateOrganization(Long orgId, Organization organizationDto) {
 
@@ -107,6 +118,8 @@ public class OrganizationsController implements OrganizationApi {
     }
 
     // DELETE /organizations/{orgId}
+    @LogMethod
+    @LogExecutionTime
     @Override
     public ResponseEntity<Organization> deleteOrganizationById(Long orgId) {
         // check if the organization exists in DB

@@ -1001,6 +1001,22 @@ paths:
       security:
         - wroclarts_auth:
             - admin:platform
+  /admin/statistics:
+    get:
+      tags:
+        - admin
+      summary: Retrieve global system statistics (AOP generated)
+      operationId: getSystemStatistics
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemStatistics'
+      security:
+        - wroclarts_auth:
+            - admin:platform
 
 components:
   schemas:
@@ -1269,6 +1285,27 @@ components:
         reason:
           type: string
           example: KRS successfully verified
+
+    SystemStatistics:
+      type: object
+      xml:
+        name: SystemStatistics
+      properties:
+        highestEventPriceRetrieved:
+          type: number
+          format: double
+          description: The highest price of any event retrieved so far
+          example: 150.0
+        apiUsagePercentages:
+          type: object
+          description: Percentage of calls for each API endpoint
+          additionalProperties:
+            type: number
+            format: double
+          example:
+            findAllEvents: 45.5
+            findEventById: 20.0
+            findAllOrganizations: 34.5
 
   securitySchemes:
     wroclarts_auth:

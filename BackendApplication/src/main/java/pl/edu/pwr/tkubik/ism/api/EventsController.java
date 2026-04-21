@@ -1,5 +1,8 @@
 package pl.edu.pwr.tkubik.ism.api;
 
+import pl.edu.pwr.tkubik.ism.aspect.LogExecutionTime;
+import pl.edu.pwr.tkubik.ism.aspect.LogMethod;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -72,6 +75,8 @@ public class EventsController implements EventApi {
     }
 
     // POST /events
+    @LogMethod
+    @LogExecutionTime
     @Override
     public ResponseEntity<Event> addEvent(Event eventDto) {
         // database Entity instance
@@ -121,6 +126,8 @@ public class EventsController implements EventApi {
     }
 
     // POST /events/{eventId}/organizations/{orgId}
+    @LogMethod
+    @LogExecutionTime
     @Override
     public ResponseEntity<Event> addOrganizationToEvent(Long eventId, Long orgId) {
 
@@ -150,6 +157,8 @@ public class EventsController implements EventApi {
     }
 
     // GET /events
+    @LogMethod
+    @LogExecutionTime
     @Override
     public ResponseEntity<List<Event>> findAllEvents(Double lat, Double lng, Integer radius, String category, String keyword, LocalDate date) {
         List<EventEntity> entities = eventService.findAllEvents();
@@ -161,6 +170,8 @@ public class EventsController implements EventApi {
     }
 
     // GET /events/{eventId}
+    @LogMethod
+    @LogExecutionTime
     @Override
     public ResponseEntity<Event> findEventById(Long eventId) {
         EventEntity entity = eventService.findEventById(eventId);
@@ -173,6 +184,8 @@ public class EventsController implements EventApi {
     }
 
     // PUT /events/{eventId}
+    @LogMethod
+    @LogExecutionTime
     @Override
     public ResponseEntity<Event> updateEvent(Long eventId, Event eventDto) {
 
@@ -208,6 +221,8 @@ public class EventsController implements EventApi {
     }
 
     // DELETE /events/{eventId}
+    @LogMethod
+    @LogExecutionTime
     @Override
     public ResponseEntity<Event> deleteEventById(Long eventId) {
         EventEntity existingEntity = eventService.findEventById(eventId);
@@ -222,6 +237,8 @@ public class EventsController implements EventApi {
     }
 
     // POST /events/{eventId}/tickets
+    @LogMethod
+    @LogExecutionTime
     @Override
     public ResponseEntity<Event> registerForEvent(Long eventId, String body) {
         // check if the event exists
@@ -249,6 +266,8 @@ public class EventsController implements EventApi {
     }
 
     // PUT /tickets/{ticketId}/scan
+    @LogMethod
+    @LogExecutionTime
     @Override
     public ResponseEntity<Event> scanTicket(String ticketId, String body) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
