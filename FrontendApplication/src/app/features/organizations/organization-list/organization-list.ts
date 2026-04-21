@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { BehaviorSubject, switchMap } from 'rxjs';
-import { OrganizationService } from '../../../services/organizations'; // Vérifie bien le chemin vers ton service
+import { OrganizationService } from '../../../services/organizations';
 
 @Component({
   selector: 'app-organization-list',
@@ -14,7 +14,7 @@ import { OrganizationService } from '../../../services/organizations'; // Vérif
 export class OrganizationListComponent {
   private service = inject(OrganizationService);
 
-  // Utilisation de la méthode robuste pour le rafraîchissement
+  // new refresh metho to update a row with the same ID
   private refreshTrigger$ = new BehaviorSubject<void>(undefined);
 
   organizations$ = this.refreshTrigger$.pipe(switchMap(() => this.service.getAll()));
@@ -28,7 +28,6 @@ export class OrganizationListComponent {
 
     this.service.delete(orgId).subscribe({
       next: () => {
-        // Rafraîchit proprement la liste après la suppression
         this.refresh();
       },
       error: (err) => {

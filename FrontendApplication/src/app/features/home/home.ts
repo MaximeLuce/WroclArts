@@ -60,7 +60,7 @@ export class HomeComponent {
 
   acceptCookies() {
     this.showCookieBanner = false;
-    // Logique pour sauvegarder le choix de l'utilisateur
+    // TO BE IMPLEMENTED
   }
 
   declineCookies() {

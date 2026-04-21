@@ -30,7 +30,6 @@ export class EventRegistrationComponent {
       next: (updatedEvent) => {
         alert(`Success! You are now registered for: ${updatedEvent.title}`);
 
-        // Appelle le déclencheur, ce qui mettra la liste à jour automatiquement et proprement
         this.refresh();
       },
       error: (err) => {

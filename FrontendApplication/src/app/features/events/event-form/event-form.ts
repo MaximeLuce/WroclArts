@@ -58,21 +58,21 @@ export class EventFormComponent implements OnInit {
   submit() {
     if (this.form.invalid) return;
 
-    // Récupération des données brutes
+    // get direct data
     const rawData = this.form.getRawValue();
 
-    // ✅ On extrait (et retire) eventId des données qu'on va envoyer
+    // extract eventId from rawData
     const { eventId, ...data } = rawData;
 
     if (this.eventId) {
-      // Mode édition (PUT)
+      // update PUT
       this.service.update(this.eventId, data as EventPayload).subscribe(() => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/admin/listevents']);
       });
     } else {
-      // Mode création (POST)
+      // create POST
       this.service.create(data as EventPayload).subscribe(() => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/admin/listevents']);
       });
     }
   }

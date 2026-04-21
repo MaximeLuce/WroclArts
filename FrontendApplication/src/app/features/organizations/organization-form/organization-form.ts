@@ -35,7 +35,7 @@ export class OrganizationFormComponent implements OnInit {
     if (id) {
       this.orgId = Number(id);
 
-      // ✅ On est en mode édition : on réactive le champ "status" pour qu'il soit modifiable
+      // if it's an update: we enable the status button
       this.form.controls.status.enable();
 
       this.service.getById(this.orgId).subscribe((organization) => {
@@ -54,22 +54,21 @@ export class OrganizationFormComponent implements OnInit {
   submit() {
     if (this.form.invalid) return;
 
-    // ✅ getRawValue() est parfait ici car il récupère TOUTES les valeurs,
-    // y compris le champ 'status' même s'il est disabled !
+    // getRawValue() to get event disabled value
     const rawData = this.form.getRawValue();
 
-    // On extrait (et retire) orgId des données qu'on va envoyer
+    // extract orgId from data
     const { orgId, ...data } = rawData;
 
     if (this.orgId) {
-      // Mode édition (PUT)
+      // update PUT
       this.service.update(this.orgId, data as OrganizationPayload).subscribe(() => {
-        this.router.navigate(['/']); // Pense à changer la route vers ta liste d'organisations
+        this.router.navigate(['/admin/listorganizations']);
       });
     } else {
-      // Mode création (POST)
+      // create POST
       this.service.create(data as OrganizationPayload).subscribe(() => {
-        this.router.navigate(['/']); // Pense à changer la route vers ta liste d'organisations
+        this.router.navigate(['/admin/listorganizations']);
       });
     }
   }
