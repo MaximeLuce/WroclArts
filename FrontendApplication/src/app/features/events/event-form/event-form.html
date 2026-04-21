@@ -1,0 +1,71 @@
+<div class="container wrapper">
+  <h2>
+    @if (eventId) {
+      Edit Event
+    } @else {
+      Create Event
+    }
+  </h2>
+  <div class="inner">
+
+      <p>We suppose that we are log in with Organization account with ID 1.</p>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+
+      <label for="title">Title</label>
+      <input id="title" formControlName="title" placeholder="Event title" />
+      @if (form.controls.title.invalid && form.controls.title.touched) {
+        <small>Title is required</small>
+      }
+
+      <label for="category">Category</label>
+      <input id="category" formControlName="category" placeholder="E.g., Music, Tech, Art..." />
+      @if (form.controls.category.invalid && form.controls.category.touched) {
+        <small>Category is required</small>
+      }
+
+      <label for="type">Type</label>
+      <input id="type" formControlName="type" placeholder="E.g., Workshop, Concert..." />
+      @if (form.controls.type.invalid && form.controls.type.touched) {
+        <small>Type is required</small>
+      }
+
+      <label for="date">Date</label>
+      <input id="date" type="date" formControlName="date" />
+      @if (form.controls.date.invalid && form.controls.date.touched) {
+        <small>Date is required</small>
+      }
+
+      <label for="time">Time</label>
+      <input id="time" type="time" formControlName="time" />
+      @if (form.controls.time.invalid && form.controls.time.touched) {
+        <small>Time is required</small>
+      }
+
+      <label for="address">Address</label>
+      <input id="address" formControlName="address" placeholder="Full address" />
+      @if (form.controls.address.invalid && form.controls.address.touched) {
+        <small>Address is required</small>
+      }
+
+      <label for="numberOfPlaces">Number of places</label>
+      <input id="numberOfPlaces" type="number" formControlName="numberOfPlaces" placeholder="Capacity" />
+      @if (form.controls.numberOfPlaces.invalid && form.controls.numberOfPlaces.touched) {
+        <small>Number of places is required</small>
+      }
+
+      <label for="price">Price</label>
+      <input id="price" type="number" formControlName="price" placeholder="Amount" />
+      @if (form.controls.price.invalid && form.controls.price.touched) {
+        <small>Price is required</small>
+      }
+
+      <label for="status">Status</label>
+      <input id="status" formControlName="status" placeholder="E.g., Draft, Published..." />
+      @if (form.controls.status.invalid && form.controls.status.touched) {
+        <small>Status is required</small>
+      }
+
+      <button type="submit">Save</button>
+    </form>
+  </div>
+</div>

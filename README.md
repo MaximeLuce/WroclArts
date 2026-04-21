@@ -51,7 +51,9 @@ Main modified files:
   2) Updating the YAML
   3) Testing many-to-many using H2-Console (eventRegistration, eventCreation, ...)
   4) Uploading the Documentation `Documentation/DataStorageStructure_lab03.pdf`
-
+- **Lab04:**
+  1) add a new controller with getStatistics
+  2) AOP 
   
 ## To-Do
 Questions: admins specific endpoint or just in security?

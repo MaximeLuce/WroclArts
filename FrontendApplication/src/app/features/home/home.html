@@ -1,0 +1,81 @@
+
+  <main class="main-content">
+
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>Discover Art</h2>
+        <p>Find events and organizations in Wrocław</p>
+
+        <div class="search-bar">
+          <span class="material-symbols-outlined search-icon">search</span>
+          <input type="text" placeholder="Search for workshops, exhibitions..." />
+        </div>
+
+        <div class="filters">
+          <button class="filter-btn primary-outline">
+            <span class="material-symbols-outlined icon">palette</span>
+            All Arts
+            <span class="material-symbols-outlined arrow">keyboard_arrow_down</span>
+          </button>
+          <button class="filter-btn">
+            <span class="material-symbols-outlined icon">calendar_today</span>
+            This Week
+          </button>
+        </div>
+      </div>
+
+      <div class="events-list">
+        @for (event of events; track event.id) {
+          <article class="event-card">
+            <img [src]="event.imageUrl" [alt]="event.title" class="event-image">
+            <div class="event-info">
+
+              <div class="event-header">
+                <span class="category">{{ event.category }}</span>
+                <span class="price">{{ event.price }} PLN</span>
+              </div>
+
+              <h3 class="title">{{ event.title }}</h3>
+              <p class="organizer">{{ event.organizer }}</p>
+
+              <div class="event-footer">
+                <span class="date"><span class="material-symbols-outlined tiny-icon">calendar_month</span> {{ event.date }}</span>
+                <span class="location"><span class="material-symbols-outlined tiny-icon">location_on</span> {{ event.location }}</span>
+              </div>
+
+            </div>
+          </article>
+        }
+      </div>
+    </aside>
+
+    <section class="map-area">
+      <div class="map-placeholder">
+
+        <div class="map-controls">
+          <button>+</button>
+          <button>-</button>
+        </div>
+
+        <div class="marker" style="top: 30%; left: 50%;"></div>
+        <div class="marker" style="top: 45%; left: 48%;"></div>
+        <div class="marker" style="top: 47%; left: 51%;"></div>
+      </div>
+
+      @if (showCookieBanner) {
+        <div class="cookie-banner">
+          <div class="cookie-content">
+            <h4>We value your privacy</h4>
+            <p>We use cookies to improve your experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.</p>
+          </div>
+          <div class="cookie-actions">
+            <button class="btn-decline" (click)="declineCookies()">Decline</button>
+            <button class="btn-accept" (click)="acceptCookies()">Accept All</button>
+          </div>
+          <button class="btn-close" (click)="declineCookies()"><span class="material-symbols-outlined">close</span></button>
+        </div>
+      }
+    </section>
+
+  </main>
+

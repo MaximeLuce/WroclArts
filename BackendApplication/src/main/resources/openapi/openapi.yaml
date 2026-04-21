@@ -1,0 +1,1288 @@
+openapi: 3.0.1
+info:
+  title: WrocłArts API
+  description: REST API documentation for the WrocłArts system managing artistic activities in Wrocław.
+  termsOfService: http://www.example.com/terms/
+  contact:
+    email: contact@maxime-luce.fr
+  license:
+    name: Apache-2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:8080/WroclArts
+    description: Local Spring Boot Development Server
+tags:
+  - name: event
+    description: access to event's records and ticketing
+  - name: organization
+    description: access to organization's records
+  - name: product
+    description: access to shop products
+  - name: order
+    description: access to e-commerce orders
+  - name: user
+    description: Visitor registration and authentication
+  - name: admin
+    description: exclusive platform administrator actions (moderation, verification)
+paths:
+  /auth/login:
+    post:
+      tags:
+        - user
+      summary: Authenticate user and get token
+      operationId: loginUser
+      requestBody:
+        description: User credentials
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        200:
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginRequest'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/LoginRequest'
+        400:
+          description: Invalid credentials
+          content: {}
+      x-codegen-request-body-name: loginRequest
+
+  /users/register:
+    post:
+      tags:
+        - user
+      summary: Register a new visitor account
+      operationId: registerUser
+      requestBody:
+        description: User data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+        required: true
+      responses:
+        200:
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRegistration'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/UserRegistration'
+        400:
+          description: Invalid input
+          content: {}
+      x-codegen-request-body-name: userRegistration
+
+  /events:
+    get:
+      tags:
+        - event
+      summary: find all events (supports filtering and search)
+      operationId: findAllEvents
+      parameters:
+        - name: lat
+          in: query
+          description: Latitude for distance filtering
+          schema:
+            type: number
+            format: double
+        - name: lng
+          in: query
+          description: Longitude for distance filtering
+          schema:
+            type: number
+            format: double
+        - name: radius
+          in: query
+          description: Search radius in meters
+          schema:
+            type: integer
+        - name: category
+          in: query
+          description: Art category to filter
+          schema:
+            type: string
+        - name: keyword
+          in: query
+          description: Keyword search
+          schema:
+            type: string
+        - name: date
+          in: query
+          description: Date to filter events
+          schema:
+            type: string
+            format: date
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Events'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Events'
+      deprecated: false
+      security:
+        - wroclarts_auth:
+            - read:events
+    post:
+      tags:
+        - event
+      summary: add a new event
+      operationId: addEvent
+      requestBody:
+        description: Event object that needs to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Event'
+        required: true
+      responses:
+        200:
+          description: Event added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Event'
+        405:
+          description: Validation exception
+          content: {}
+      security:
+        - wroclarts_auth:
+            - write:events
+      x-codegen-request-body-name: event
+
+  /events/{eventId}:
+    get:
+      tags:
+        - event
+      summary: find an event by eventId
+      operationId: findEventById
+      parameters:
+        - name: eventId
+          in: path
+          description: Numeric ID of the event to get.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Event'
+        400:
+          description: Invalid eventId supplied
+          content: {}
+        404:
+          description: Event not found
+          content: {}
+      deprecated: false
+      security:
+        - wroclarts_auth:
+            - read:events
+    put:
+      tags:
+        - event
+      summary: update an existing event
+      operationId: updateEvent
+      parameters:
+        - name: eventId
+          in: path
+          description: Numeric ID of the event to update.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Event object that needs to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Event'
+        required: true
+      responses:
+        200:
+          description: Event updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Event'
+        404:
+          description: Event not found
+          content: { }
+        405:
+          description: Validation exception
+          content: { }
+      security:
+        - wroclarts_auth:
+            - write:events
+      x-codegen-request-body-name: event
+
+    delete:
+      tags:
+        - event
+      summary: delete an event by eventId (Organization owner)
+      operationId: deleteEventById
+      parameters:
+        - name: eventId
+          in: path
+          description: Numeric ID of the event to delete.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Event'
+        400:
+          description: Invalid eventId supplied
+          content: {}
+        404:
+          description: Event not found
+          content: {}
+      deprecated: false
+      security:
+        - wroclarts_auth:
+            - write:events
+
+  /events/{eventId}/organizations/{orgId}:
+    post:
+      tags:
+        - event
+      summary: Add an organization to an existing event (Co-host)
+      operationId: addOrganizationToEvent
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Organization successfully added to the event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          description: Event or Organization not found
+
+  /events/{eventId}/tickets:
+    post:
+      tags:
+        - event
+      summary: Register/Buy a ticket for an event
+      operationId: registerForEvent
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Empty body for registration
+        content:
+          application/json:
+            schema:
+              type: string
+          application/xml:
+            schema:
+              type: string
+        required: false
+      responses:
+        200:
+          description: Ticket generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Event'
+        400:
+          description: Event fully booked or payment failed
+          content: {}
+      security:
+        - wroclarts_auth:
+            - write:events
+      x-codegen-request-body-name: body
+
+  /tickets/{ticketId}/scan:
+    put:
+      tags:
+        - event
+      summary: Scan a QR digital ticket to check-in
+      operationId: scanTicket
+      parameters:
+        - name: ticketId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Empty body for scanning
+        content:
+          application/json:
+            schema:
+              type: string
+          application/xml:
+            schema:
+              type: string
+        required: false
+      responses:
+        200:
+          description: Ticket successfully consumed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Event'
+        400:
+          description: Ticket already scanned or invalid
+          content: {}
+      security:
+        - wroclarts_auth:
+            - write:events
+      x-codegen-request-body-name: body
+
+  /organizations:
+    get:
+      tags:
+        - organization
+      summary: find all organizations
+      operationId: findAllOrganizations
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organizations'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Organizations'
+      deprecated: false
+      security:
+        - wroclarts_auth:
+            - read:organizations
+    post:
+      tags:
+        - organization
+      summary: register a new organization
+      operationId: addOrganization
+      requestBody:
+        description: Organization object to register
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organization'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Organization'
+        required: true
+      responses:
+        200:
+          description: Organization registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        405:
+          description: Validation exception
+          content: {}
+      security:
+        - wroclarts_auth:
+            - write:organizations
+      x-codegen-request-body-name: organization
+
+  /organizations/{orgId}:
+    get:
+      tags:
+        - organization
+      summary: find an organization by orgId
+      operationId: findOrganizationById
+      parameters:
+        - name: orgId
+          in: path
+          description: Numeric ID of the organization to get.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        400:
+          description: Invalid orgId supplied
+          content: { }
+        404:
+          description: Organization not found
+          content: { }
+      deprecated: false
+      security:
+        - wroclarts_auth:
+            - read:organizations
+
+    delete:
+      tags:
+        - organization
+      summary: delete an organization by orgId
+      operationId: deleteOrganizationById
+      parameters:
+        - name: orgId
+          in: path
+          description: Numeric ID of the organization to delete.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        400:
+          description: Invalid orgId supplied
+          content: { }
+        404:
+          description: Organization not found
+          content: { }
+      deprecated: false
+      security:
+        - wroclarts_auth:
+            - write:organizations
+
+    # --- LE NOUVEAU PUT EST ICI ---
+    put:
+      tags:
+        - organization
+      summary: update an existing organization profile
+      operationId: updateOrganization
+      parameters:
+        - name: orgId
+          in: path
+          description: Numeric ID of the organization to update.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Organization object to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organization'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Organization'
+        required: true
+      responses:
+        200:
+          description: Organization updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        404:
+          description: Organization not found
+          content: { }
+        405:
+          description: Validation exception
+          content: { }
+      security:
+        - wroclarts_auth:
+            - write:organizations
+      x-codegen-request-body-name: organization
+
+  /products:
+    get:
+      tags:
+        - product
+      summary: find all products
+      operationId: findAllProducts
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Products'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Products'
+      deprecated: false
+      security:
+        - wroclarts_auth:
+            - read:products
+    post:
+      tags:
+        - product
+      summary: add a new product to shop
+      operationId: addProduct
+      requestBody:
+        description: Product object to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        200:
+          description: Product added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Product'
+        405:
+          description: Validation exception
+          content: {}
+      security:
+        - wroclarts_auth:
+            - write:products
+      x-codegen-request-body-name: product
+
+  /products/{productId}:
+    get:
+      tags:
+        - product
+      summary: find a product by productId
+      operationId: findProductById
+      parameters:
+        - name: productId
+          in: path
+          description: Numeric ID of the product.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Product'
+        400:
+          description: Invalid productId supplied
+          content: {}
+        404:
+          description: Product not found
+          content: {}
+      deprecated: false
+      security:
+        - wroclarts_auth:
+            - read:products
+    put:
+      tags:
+        - product
+      summary: update an existing product
+      operationId: updateProduct
+      parameters:
+        - name: productId
+          in: path
+          description: Numeric ID of the product.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Product object to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        200:
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Product'
+        404:
+          description: Product not found
+          content: {}
+        405:
+          description: Validation exception
+          content: {}
+      security:
+        - wroclarts_auth:
+            - write:products
+      x-codegen-request-body-name: product
+
+  /orders:
+    get:
+      tags:
+        - order
+      summary: find all orders
+      operationId: findAllOrders
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Orders'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Orders'
+      deprecated: false
+      security:
+        - wroclarts_auth:
+            - read:orders
+    post:
+      tags:
+        - order
+      summary: Create a new order (checkout cart)
+      operationId: createOrder
+      requestBody:
+        description: Order creation details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Order'
+        required: true
+      responses:
+        200:
+          description: Order placed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Order'
+        400:
+          description: Item out of stock or payment failed
+          content: {}
+      security:
+        - wroclarts_auth:
+            - write:orders
+      x-codegen-request-body-name: order
+
+  /orders/{orderId}:
+    get:
+      tags:
+        - order
+      summary: find an order by orderId
+      operationId: findOrderById
+      parameters:
+        - name: orderId
+          in: path
+          description: Numeric ID of the order.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Order'
+        400:
+          description: Invalid orderId supplied
+          content: {}
+        404:
+          description: Order not found
+          content: {}
+      deprecated: false
+      security:
+        - wroclarts_auth:
+            - read:orders
+    put:
+      tags:
+        - order
+      summary: update an existing order (e.g., status to Shipped)
+      operationId: updateOrder
+      parameters:
+        - name: orderId
+          in: path
+          description: Numeric ID of the order.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Order object to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Order'
+        required: true
+      responses:
+        200:
+          description: Order updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Order'
+        404:
+          description: Order not found
+          content: {}
+        405:
+          description: Validation exception
+          content: {}
+      security:
+        - wroclarts_auth:
+            - write:orders
+      x-codegen-request-body-name: order
+
+  /reviews:
+    post:
+      tags:
+        - user
+      summary: Leave a review for an event or organization
+      operationId: postReview
+      requestBody:
+        description: Review details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Review'
+        required: true
+      responses:
+        200:
+          description: Review posted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Review'
+      security:
+        - wroclarts_auth:
+            - write:events
+      x-codegen-request-body-name: review
+
+  /support/tickets:
+    post:
+      tags:
+        - user
+      summary: Submit a support ticket to platform administrators
+      operationId: submitSupportTicket
+      requestBody:
+        description: Support ticket details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportTicket'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/SupportTicket'
+        required: true
+      responses:
+        200:
+          description: Support ticket submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportTicket'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SupportTicket'
+      x-codegen-request-body-name: supportTicket
+
+
+  /admin/organizations/{orgId}/status:
+    put:
+      tags:
+        - admin
+      summary: verify, reject, suspend or ban an organization
+      operationId: adminUpdateOrganizationStatus
+      parameters:
+        - name: orgId
+          in: path
+          description: Numeric ID of the organization to moderate.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Status update details with optional reason
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminStatusUpdate'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/AdminStatusUpdate'
+        required: true
+      responses:
+        200:
+          description: Status successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        400:
+          description: Invalid input
+          content: {}
+        404:
+          description: Organization not found
+          content: {}
+      security:
+        - wroclarts_auth:
+            - admin:platform
+      x-codegen-request-body-name: adminStatusUpdate
+
+  /admin/events/{eventId}:
+    delete:
+      tags:
+        - admin
+      summary: cancel or moderate an event violating ToS
+      operationId: adminDeleteEvent
+      parameters:
+        - name: eventId
+          in: path
+          description: Numeric ID of the event to moderate.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Event successfully removed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Event'
+        400:
+          description: Invalid eventId supplied
+          content: {}
+        404:
+          description: Event not found
+          content: {}
+      security:
+        - wroclarts_auth:
+            - admin:platform
+
+  /admin/products/{productId}:
+    delete:
+      tags:
+        - admin
+      summary: moderate a product violating ToS
+      operationId: adminDeleteProduct
+      parameters:
+        - name: productId
+          in: path
+          description: Numeric ID of the product to moderate.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Product successfully removed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Product'
+        400:
+          description: Invalid productId supplied
+          content: {}
+        404:
+          description: Product not found
+          content: {}
+      security:
+        - wroclarts_auth:
+            - admin:platform
+
+components:
+  schemas:
+    LoginRequest:
+      required:
+        - email
+        - password
+      type: object
+      xml:
+        name: LoginRequest
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    UserRegistration:
+      required:
+        - email
+        - password
+      type: object
+      xml:
+        name: UserRegistration
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        username:
+          type: string
+
+    Review:
+      required:
+        - rating
+        - comment
+      type: object
+      xml:
+        name: Review
+      properties:
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        comment:
+          type: string
+
+    SupportTicket:
+      required:
+        - subject
+        - message
+      type: object
+      xml:
+        name: SupportTicket
+      properties:
+        subject:
+          type: string
+        message:
+          type: string
+
+    Event:
+      required:
+        - title
+        - date
+        - organizationsId
+      type: object
+      xml:
+        name: Event
+      properties:
+        eventId:
+          type: integer
+          format: int64
+        title:
+          type: string
+          example: Pottery Workshop
+        date:
+          type: string
+          example: "2026-10-14"
+        time:
+          type: string
+          example: "18:00"
+        address:
+          type: string
+          example: Nadodrze
+        category:
+          type: string
+          example: Crafts
+        price:
+          type: number
+          format: double
+          example: 120.0
+        numberOfPlaces:
+          type: integer
+          example: 15
+        type:
+          type: string
+          example: In-Person
+        status:
+          type: string
+          example: Published
+        isRegistered:
+          type: boolean
+          description: Is the current user registered
+          example: false
+    Events:
+      type: array
+      items:
+        $ref: '#/components/schemas/Event'
+      xml:
+        name: Events
+        wrapped: true
+      example: |-
+        <Events>
+          <Event>
+            <eventId>1</eventId>
+            <title>Pottery Workshop</title>
+            <date>2026-10-14</date>
+            <time>18:00</time>
+            <address>Nadodrze</address>
+            <category>Crafts</category>
+            <price>120.0</price>
+            <numberOfPlaces>15</numberOfPlaces>
+            <type>In-Person</type>
+            <status>Published</status>
+          </Event>
+        </Events>
+
+    Organization:
+      required:
+        - email
+        - krsNumber
+        - nameOrga
+      type: object
+      xml:
+        name: Organization
+      properties:
+        orgId:
+          type: integer
+          format: int64
+        email:
+          type: string
+          example: contact@ceramicstudio.pl
+        nameOrga:
+          type: string
+          example: Ceramic Studio Wrocław
+        krsNumber:
+          type: string
+          example: "0000123456"
+        subscriptionDate:
+          type: string
+          format: date
+          example: "2026-04-10"
+        status:
+          type: string
+          example: PendingVerification
+    Organizations:
+      type: array
+      items:
+        $ref: '#/components/schemas/Organization'
+      xml:
+        name: Organizations
+        wrapped: true
+      example: |-
+        <Organizations>
+          <Organization>
+            <orgId>1</orgId>
+            <email>contact@ceramicstudio.pl</email>
+            <krsNumber>0000123456</krsNumber>
+            <status>PendingVerification</status>
+          </Organization>
+        </Organizations>
+
+    Product:
+      required:
+        - name
+        - price
+      type: object
+      xml:
+        name: Product
+      properties:
+        productId:
+          type: integer
+          format: int64
+        name:
+          type: string
+          example: Ceramic Mug
+        price:
+          type: number
+          format: double
+          example: 45.0
+        stockQuantity:
+          type: integer
+          format: int32
+          example: 10
+        status:
+          type: string
+          example: Active
+    Products:
+      type: array
+      items:
+        $ref: '#/components/schemas/Product'
+      xml:
+        name: Products
+        wrapped: true
+      example: |-
+        <Products>
+          <Product>
+            <productId>1</productId>
+            <name>Ceramic Mug</name>
+            <price>45.0</price>
+            <stockQuantity>10</stockQuantity>
+            <status>Active</status>
+          </Product>
+        </Products>
+
+    Order:
+      required:
+        - status
+        - deliveryMethod
+      type: object
+      xml:
+        name: Order
+      properties:
+        orderId:
+          type: integer
+          format: int64
+        status:
+          type: string
+          example: Shipped
+        deliveryMethod:
+          type: string
+          example: Postal
+        trackingId:
+          type: string
+          example: PL987654321
+    Orders:
+      type: array
+      items:
+        $ref: '#/components/schemas/Order'
+      xml:
+        name: Orders
+        wrapped: true
+      example: |-
+        <Orders>
+          <Order>
+            <orderId>1</orderId>
+            <status>Shipped</status>
+            <deliveryMethod>Postal</deliveryMethod>
+            <trackingId>PL987654321</trackingId>
+          </Order>
+        </Orders>
+
+    AdminStatusUpdate:
+      required:
+        - status
+      type: object
+      xml:
+        name: AdminStatusUpdate
+      properties:
+        status:
+          type: string
+          example: Verified
+        reason:
+          type: string
+          example: KRS successfully verified
+
+  securitySchemes:
+    wroclarts_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://localhost/oauth/dialog
+          scopes:
+            write:events: modify events records in your account
+            read:events: read your events records
+            write:organizations: modify organization records
+            read:organizations: read organization records
+            write:products: modify shop products
+            read:products: read shop products
+            write:orders: modify order status
+            read:orders: read order status
+            admin:platform: exclusive platform administrator actions (moderation, verification)

@@ -1,0 +1,52 @@
+
+
+@if ((events$ | async)?.length === 0) {
+  <p>No event found</p>
+}
+
+<div class="container wrapper">
+  <h2>Events</h2>
+  <div class="inner">
+    <h3>Events data</h3>
+
+    <table class="styled-table table-bordered">
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>Address</th>
+        <th>Category</th>
+        <th>Date</th>
+        <th>Number of places</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th>Time</th>
+        <th>Title</th>
+        <th>Type</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+
+      <tbody>
+        @for (event of (events$ | async); track event.eventId) {
+          <tr>
+            <td>{{ event.eventId }}</td>
+            <td>{{ event.address }}</td>
+            <td>{{ event.category }}</td>
+            <td>{{ event.date }}</td>
+            <td>{{ event.numberOfPlaces }}</td>
+            <td>{{ event.price }}</td>
+            <td>{{ event.status }}</td>
+            <td>{{ event.time }}</td>
+            <td>{{ event.title }}</td>
+            <td>{{ event.type }}</td>
+            <td>
+              <a [routerLink]="['/admin/editevent', event.eventId]" class="button">Edit</a>
+              <button (click)="delete(event.eventId!)">🗑 Delete</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+  </div>
+</div>

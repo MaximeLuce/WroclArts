@@ -1,0 +1,47 @@
+<div class="container wrapper">
+  <h2>
+    @if (orgId) {
+      Edit Organization
+    } @else {
+      Create Organization
+    }
+  </h2>
+  <div class="inner">
+
+    <p>We suppose that we are log in with Organization account with ID 1.</p>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+
+      <label for="email">Email</label>
+      <input id="email" formControlName="email" placeholder="email" />
+      @if (form.controls.email.invalid && form.controls.email.touched) {
+        <small>Email is required</small>
+      }
+
+      <label for="nameOrga">Category</label>
+      <input id="nameOrga" formControlName="nameOrga" placeholder="Name" />
+      @if (form.controls.nameOrga.invalid && form.controls.nameOrga.touched) {
+        <small>Name is required</small>
+      }
+
+      <label for="krsNumber">Type</label>
+      <input id="krsNumber" formControlName="krsNumber" placeholder="krsNumber" />
+      @if (form.controls.krsNumber.invalid && form.controls.krsNumber.touched) {
+        <small>KRS Number is required</small>
+      }
+
+      <label for="subscriptionDate">Type</label>
+      <input type="date" id="subscriptionDate" formControlName="subscriptionDate" placeholder="subscriptionDate" />
+      @if (form.controls.subscriptionDate.invalid && form.controls.subscriptionDate.touched) {
+        <small>subscriptionDate is required</small>
+      }
+
+      <label for="status">Status</label>
+      <input id="status" formControlName="status" placeholder="Status" />
+      @if (form.controls.status.invalid && form.controls.status.touched) {
+        <small>Status is required</small>
+      }
+
+      <button type="submit">Save</button>
+    </form>
+  </div>
+</div>

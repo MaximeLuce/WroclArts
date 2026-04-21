@@ -1,0 +1,40 @@
+<header class="top-nav">
+  <div class="logo">
+    <div class="logo-icon-bg">
+      <span class="material-symbols-outlined logo-icon">rocket_launch</span>
+    </div>
+    <h1>WrocłArts</h1>
+  </div>
+
+  <nav class="nav-links">
+    <a routerLink="/"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{exact: true}"
+       class="nav-btn">
+      <span class="material-symbols-outlined icon">map</span>
+      Home
+    </a>
+    <a routerLink="/registerevent"
+       routerLinkActive="active"
+       class="nav-btn">
+      <span class="material-symbols-outlined icon">domain</span>
+      Register Event
+    </a>
+
+    <a routerLink="/admin"
+       routerLinkActive="active"
+       class="nav-btn">
+      <span class="material-symbols-outlined icon">admin_panel_settings</span>
+      Admin Dashboard
+    </a>
+  </nav>
+
+  <div class="user-actions">
+    <button class="lang-btn">
+      <span class="flag">🇵🇱</span> PL
+    </button>
+    <button class="signin-btn">
+      <span class="material-symbols-outlined icon">person</span> Sign In
+    </button>
+  </div>
+</header>

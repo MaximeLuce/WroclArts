@@ -1,0 +1,42 @@
+@if ((organizations$ | async)?.length === 0) {
+  <p>No organization found</p>
+}
+
+<div class="container wrapper">
+  <h2>Organizations</h2>
+  <div class="inner">
+    <h3>Organizations data</h3>
+
+    <table class="styled-table table-bordered">
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>KRS Number</th>
+        <th>Subscription Date</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+
+      <tbody>
+        @for (org of (organizations$ | async); track org.orgId) {
+          <tr>
+            <td>{{ org.orgId }}</td>
+            <td>{{ org.nameOrga }}</td>
+            <td>{{ org.email }}</td>
+            <td>{{ org.krsNumber }}</td>
+            <td>{{ org.subscriptionDate }}</td>
+            <td>{{ org.status }}</td>
+            <td>
+              <a [routerLink]="['/admin/editorganization', org.orgId]" class="button">Edit</a>
+              <button (click)="delete(org.orgId!)">🗑 Delete</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+  </div>
+</div>
