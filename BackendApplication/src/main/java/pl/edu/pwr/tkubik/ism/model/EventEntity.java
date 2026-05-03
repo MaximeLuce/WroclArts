@@ -7,6 +7,8 @@ import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table(name = "events")
 public class EventEntity {
@@ -168,5 +170,38 @@ public class EventEntity {
         this.numberOfPlaces = numberOfPlaces;
         this.type = type;
         this.status = status;
+    }
+
+    @JsonProperty("organizationName")
+    public String getOrganizationName() {
+        System.out.println("DEBUG: ici !");
+        if (this.creators == null) {
+            System.out.println("DEBUG: 'creators' est NULL pour l'événement ID: " + this.id);
+            return null;
+        }
+        if (this.creators.isEmpty()) {
+            System.out.println("DEBUG: La liste 'creators' est VIDE pour l'événement ID: " + this.id);
+            return null;
+        }
+        // we check if there's a organization that creates the event
+        if (this.creators != null && !this.creators.isEmpty()) {
+
+            EventCreation firstCreation = this.creators.iterator().next();
+
+            if (firstCreation == null) {
+                System.out.println("DEBUG: Le premier EventCreation est NULL pour l'événement ID: " + this.id);
+                return null;
+            }
+            if (firstCreation.getOrganization() == null) {
+                System.out.println("DEBUG: L'Organization associée est NULL pour l'EventCreation ID: " + firstCreation.getId());
+                return null;
+            }
+
+            if (firstCreation != null && firstCreation.getOrganization() != null) {
+
+                return firstCreation.getOrganization().getNameOrga();
+            }
+        }
+        return null; // if no organization
     }
 }

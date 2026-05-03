@@ -1,8 +1,5 @@
 package pl.edu.pwr.tkubik.ism.api;
 
-import pl.edu.pwr.tkubik.ism.aspect.LogExecutionTime;
-import pl.edu.pwr.tkubik.ism.aspect.LogMethod;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +22,6 @@ public class UserController implements UserApi {
 
     // POST /auth/login
     @Override
-    @LogMethod
-    @LogExecutionTime
     public ResponseEntity<LoginRequest> loginUser(LoginRequest loginRequest) {
         // NOT IMPLEMENTED, we suppose by default that the user is connected
         return new ResponseEntity<>(loginRequest, HttpStatus.OK);
@@ -34,8 +29,6 @@ public class UserController implements UserApi {
 
     // POST /users/register
     @Override
-    @LogMethod
-    @LogExecutionTime
     public ResponseEntity<UserRegistration> registerUser(UserRegistration userRegistration) {
         // instance Entity of the DB
         UserEntity newEntity = new UserEntity();
@@ -57,8 +50,6 @@ public class UserController implements UserApi {
 
     // POST /reviews
     @Override
-    @LogMethod
-    @LogExecutionTime
     public ResponseEntity<Review> postReview(Review review) {
         // NOT IMPLEMENTED, return 200 OK by default
         return new ResponseEntity<>(review, HttpStatus.OK);
@@ -66,8 +57,6 @@ public class UserController implements UserApi {
 
     // POST /support/tickets
     @Override
-    @LogMethod
-    @LogExecutionTime
     public ResponseEntity<SupportTicket> submitSupportTicket(SupportTicket supportTicket) {
         // NOT IMPLEMENTED, return 200 OK by default
         return new ResponseEntity<>(supportTicket, HttpStatus.OK);

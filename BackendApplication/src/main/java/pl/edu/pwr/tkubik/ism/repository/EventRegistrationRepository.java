@@ -6,12 +6,15 @@ import org.springframework.data.jpa.repository.Query;
 import pl.edu.pwr.tkubik.ism.model.EventRegistration;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EventRegistrationRepository extends JpaRepository<EventRegistration, Long> {
 
-    // Spring Data JPA va automatiquement traduire ceci en :
+    // Spring Data JPA will run this:
     // SELECT COUNT(*) > 0 FROM event_registrations WHERE event_id = ? AND user_id = ?
     boolean existsByEventIdAndUserId(Long eventId, Long userId);
+
+    Optional<EventRegistration> findByEventIdAndUserId(Long eventId, Long userId);
 
     // native query to get the total of users for a specific event
     @Query(value="SELECT e.title, count(er.user_id) "

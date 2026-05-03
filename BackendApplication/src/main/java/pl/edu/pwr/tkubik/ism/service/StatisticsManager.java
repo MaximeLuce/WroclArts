@@ -8,14 +8,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 public class StatisticsManager {
 
-    // Stocke le nombre d'appels pour chaque méthode
+    // save the nb of call for each methods
     private final Map<String, AtomicInteger> methodCalls = new ConcurrentHashMap<>();
-    // Compteur total pour calculer les pourcentages
+    // main counter to compute the percentages
     private final AtomicInteger totalApiCalls = new AtomicInteger(0);
-    // Stocke le prix le plus élevé trouvé jusqu'à présent
+    // save the highesteventprice
     private Double highestEventPrice = 0.0;
 
-    // --- Méthodes pour mettre à jour les stats (utilisées par l'Aspect) ---
+    // methods to update stats (used by aspects)
 
     public void recordMethodCall(String methodName) {
         methodCalls.computeIfAbsent(methodName, k -> new AtomicInteger(0)).incrementAndGet();
@@ -28,7 +28,7 @@ public class StatisticsManager {
         }
     }
 
-    // --- Méthodes pour lire les stats (utilisées par le Contrôleur) ---
+    // methods to read stats (used by controllers) ---
 
     public Map<String, Double> getMethodUsagePercentages() {
         Map<String, Double> percentages = new ConcurrentHashMap<>();
@@ -38,7 +38,6 @@ public class StatisticsManager {
 
         methodCalls.forEach((method, count) -> {
             double percentage = (count.get() * 100.0) / total;
-            // Arrondir à 2 décimales
             percentages.put(method, Math.round(percentage * 100.0) / 100.0);
         });
 

@@ -17,4 +17,6 @@ public interface EventRegistrationService {
     public List<EventOccupancyDTO> getEventOccupancies();
 
     public EventRegistration addRegistration(EventRegistration registration);
+
+    public void removeRegistration(EventRegistration registration);
 }

@@ -1,7 +1,5 @@
 package pl.edu.pwr.tkubik.ism.api;
 
-import pl.edu.pwr.tkubik.ism.aspect.LogExecutionTime;
-import pl.edu.pwr.tkubik.ism.aspect.LogMethod;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,14 +19,11 @@ public class OrdersController implements OrderApi {
     private NativeWebRequest nativeWebRequest = null;
 
     @Override
-    @LogMethod
-    @LogExecutionTime
     public Optional<NativeWebRequest> getRequest() {
         return Optional.ofNullable(nativeWebRequest);
     }
 
-    @LogMethod
-    @LogExecutionTime
+
     @Override
     public ResponseEntity<List<Order>> findAllOrders() {
         List<Order> orders = new ArrayList<>();
@@ -44,8 +39,7 @@ public class OrdersController implements OrderApi {
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    @LogMethod
-    @LogExecutionTime
+
     @Override
     public ResponseEntity<Order> findOrderById(Long orderId) {
         Order o = new Order();
@@ -56,8 +50,6 @@ public class OrdersController implements OrderApi {
         return new ResponseEntity<>(o, HttpStatus.OK);
     }
 
-    @LogMethod
-    @LogExecutionTime
     @Override
     public ResponseEntity<Order> updateOrder(Long orderId, Order order) {
         // we fake the update

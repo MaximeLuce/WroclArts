@@ -1,8 +1,5 @@
 package pl.edu.pwr.tkubik.ism.api;
 
-import pl.edu.pwr.tkubik.ism.aspect.LogExecutionTime;
-import pl.edu.pwr.tkubik.ism.aspect.LogMethod;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +12,8 @@ import pl.edu.pwr.tkubik.ism.service.OrganizationService;
 import pl.edu.pwr.tkubik.ism.repository.EventRegistrationRepository;
 import pl.edu.pwr.tkubik.ism.api.EventApi;
 import pl.edu.pwr.tkubik.ism.model.Event;
+
+import java.util.Optional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -71,12 +70,12 @@ public class EventsController implements EventApi {
         // Si ce n'est pas encore fait, décommente la ligne ci-dessous une fois fait :
         dto.setIsRegistered(isRegistered);
 
+        dto.setOrganizationName(entity.getOrganizationName());
+
         return dto;
     }
 
     // POST /events
-    @LogMethod
-    @LogExecutionTime
     @Override
     public ResponseEntity<Event> addEvent(Event eventDto) {
         // database Entity instance
@@ -126,8 +125,6 @@ public class EventsController implements EventApi {
     }
 
     // POST /events/{eventId}/organizations/{orgId}
-    @LogMethod
-    @LogExecutionTime
     @Override
     public ResponseEntity<Event> addOrganizationToEvent(Long eventId, Long orgId) {
 
@@ -157,8 +154,6 @@ public class EventsController implements EventApi {
     }
 
     // GET /events
-    @LogMethod
-    @LogExecutionTime
     @Override
     public ResponseEntity<List<Event>> findAllEvents(Double lat, Double lng, Integer radius, String category, String keyword, LocalDate date) {
         List<EventEntity> entities = eventService.findAllEvents();
@@ -170,8 +165,6 @@ public class EventsController implements EventApi {
     }
 
     // GET /events/{eventId}
-    @LogMethod
-    @LogExecutionTime
     @Override
     public ResponseEntity<Event> findEventById(Long eventId) {
         EventEntity entity = eventService.findEventById(eventId);
@@ -184,8 +177,6 @@ public class EventsController implements EventApi {
     }
 
     // PUT /events/{eventId}
-    @LogMethod
-    @LogExecutionTime
     @Override
     public ResponseEntity<Event> updateEvent(Long eventId, Event eventDto) {
 
@@ -221,8 +212,6 @@ public class EventsController implements EventApi {
     }
 
     // DELETE /events/{eventId}
-    @LogMethod
-    @LogExecutionTime
     @Override
     public ResponseEntity<Event> deleteEventById(Long eventId) {
         EventEntity existingEntity = eventService.findEventById(eventId);
@@ -237,8 +226,6 @@ public class EventsController implements EventApi {
     }
 
     // POST /events/{eventId}/tickets
-    @LogMethod
-    @LogExecutionTime
     @Override
     public ResponseEntity<Event> registerForEvent(Long eventId, String body) {
         // check if the event exists
@@ -265,9 +252,36 @@ public class EventsController implements EventApi {
         return new ResponseEntity<>(convertToDto(event), HttpStatus.OK);
     }
 
+    // DELETE /events/{eventId}/tickets
+    @Override
+    public ResponseEntity<Event> unregisterFromEvent(Long eventId) {
+
+        // check if the event exist
+        EventEntity event = eventService.findEventById(eventId);
+
+        if (event == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // error 404
+        }
+
+        // we use CURRENT_USER_IDalready defined
+
+        // search of the existing registration
+        Optional<pl.edu.pwr.tkubik.ism.model.EventRegistration> existingRegistration =
+                eventRegistrationRepository.findByEventIdAndUserId(eventId, CURRENT_USER_ID);
+
+        // if exists, we remove it
+        if (existingRegistration.isPresent()) {
+            eventRegistrationService.removeRegistration(existingRegistration.get());
+        } else {
+            // if not, error 404
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        // we send the updated event
+        return new ResponseEntity<>(convertToDto(event), HttpStatus.OK);
+    }
+
     // PUT /tickets/{ticketId}/scan
-    @LogMethod
-    @LogExecutionTime
     @Override
     public ResponseEntity<Event> scanTicket(String ticketId, String body) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);

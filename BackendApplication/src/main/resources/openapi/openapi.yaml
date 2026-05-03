@@ -359,6 +359,34 @@ paths:
         - wroclarts_auth:
             - write:events
       x-codegen-request-body-name: body
+    delete:
+      tags:
+        - event
+      summary: Cancel registration/Unregister from an event
+      operationId: unregisterFromEvent
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Registration cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Event'
+        404:
+          description: Event or registration not found
+          content: { }
+      security:
+        - wroclarts_auth:
+            - write:events
 
   /tickets/{ticketId}/scan:
     put:
@@ -1124,6 +1152,10 @@ components:
           type: boolean
           description: Is the current user registered
           example: false
+        organizationName:
+          type: string
+          description: Name of the organization that creates the event
+          example: Ceramic Studio Wrocław
     Events:
       type: array
       items:

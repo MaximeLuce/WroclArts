@@ -1,5 +1,8 @@
 package pl.edu.pwr.tkubik.ism.service;
 
+import pl.edu.pwr.tkubik.ism.aspect.LogExecutionTime;
+import pl.edu.pwr.tkubik.ism.aspect.LogMethod;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,8 @@ public class EventRegistrationServiceImpl implements EventRegistrationService {
     // please note, that here we operate on DTO types (not Entities)
     // please note, that EventRegistrationDTO has no corresponding Entity
 
+    @LogMethod
+    @LogExecutionTime
     @Override
     public EventRegistrationDTO addEventRegistration(EventRegistrationDTO erDTO) {
         // OPTION B : Vérification préalable de l'existence de l'inscription
@@ -49,6 +54,8 @@ public class EventRegistrationServiceImpl implements EventRegistrationService {
         return null;
     }
 
+    @LogMethod
+    @LogExecutionTime
     @Override
     public List<EventRegistrationDTO> findAllEventRegistrations() {
         return eventRegistrationRepository.findAll().stream()
@@ -60,6 +67,8 @@ public class EventRegistrationServiceImpl implements EventRegistrationService {
                 )).collect(Collectors.toList());
     }
 
+    @LogMethod
+    @LogExecutionTime
     @Override
     public List<EventOccupancyDTO> getEventOccupancies() {
         // convert SQL response to EventOccupancyDTO
@@ -70,8 +79,17 @@ public class EventRegistrationServiceImpl implements EventRegistrationService {
                 )).collect(Collectors.toList());
     }
 
+    @LogMethod
+    @LogExecutionTime
     @Override
     public EventRegistration addRegistration(EventRegistration registration) {
         return eventRegistrationRepository.save(registration);
+    }
+
+    @LogMethod
+    @LogExecutionTime
+    @Override
+    public void removeRegistration(EventRegistration registration) {
+        eventRegistrationRepository.delete(registration);
     }
 }

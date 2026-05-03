@@ -9,19 +9,7 @@ public class EventRegistrationDTO {
     private Long eventId;
     private LocalDate dateRegistration;
 
-    // --- Constructeurs ---
-
-    public EventRegistrationDTO() {
-    }
-
-    public EventRegistrationDTO(Long id, Long userId, Long eventId, LocalDate dateRegistration) {
-        this.id = id;
-        this.userId = userId;
-        this.eventId = eventId;
-        this.dateRegistration = dateRegistration;
-    }
-
-    // --- Getters et Setters ---
+    // getters and setters
 
     public Long getId() {
         return id;
@@ -52,6 +40,18 @@ public class EventRegistrationDTO {
     }
 
     public void setDateRegistration(LocalDate dateRegistration) {
+        this.dateRegistration = dateRegistration;
+    }
+
+    // constructors
+
+    public EventRegistrationDTO() {
+    }
+
+    public EventRegistrationDTO(Long id, Long userId, Long eventId, LocalDate dateRegistration) {
+        this.id = id;
+        this.userId = userId;
+        this.eventId = eventId;
         this.dateRegistration = dateRegistration;
     }
 }

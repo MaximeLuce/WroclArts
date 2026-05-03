@@ -5,8 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.edu.pwr.tkubik.ism.aspect.LogExecutionTime;
-import pl.edu.pwr.tkubik.ism.aspect.LogMethod;
 import pl.edu.pwr.tkubik.ism.service.StatisticsManager;
 
 import java.util.HashMap;
@@ -20,8 +18,6 @@ public class StatisticsController {
     private StatisticsManager statisticsManager;
 
     @GetMapping
-    @LogMethod
-    @LogExecutionTime
     public ResponseEntity<Map<String, Object>> getSystemStatistics() {
         Map<String, Object> stats = new HashMap<>();
 

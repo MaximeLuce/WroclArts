@@ -1,8 +1,5 @@
 package pl.edu.pwr.tkubik.ism.api;
 
-import pl.edu.pwr.tkubik.ism.aspect.LogExecutionTime;
-import pl.edu.pwr.tkubik.ism.aspect.LogMethod;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +19,10 @@ public class AdminController implements AdminApi {
     private NativeWebRequest nativeWebRequest = null;
 
     @Override
-    @LogMethod
-    @LogExecutionTime
     public Optional<NativeWebRequest> getRequest() {
         return Optional.ofNullable(nativeWebRequest);
     }
 
-    @LogMethod
-    @LogExecutionTime
     @Override
     public ResponseEntity<Organization> adminUpdateOrganizationStatus(Long orgId, AdminStatusUpdate adminStatusUpdate) {
         System.out.println("The admin has changed the status of Organization " + orgId + " to: " + adminStatusUpdate.getStatus());
@@ -45,8 +38,6 @@ public class AdminController implements AdminApi {
         return new ResponseEntity<>(org, HttpStatus.OK);
     }
 
-    @LogMethod
-    @LogExecutionTime
     @Override
     public ResponseEntity<Event> adminDeleteEvent(Long eventId) {
         System.out.println("The admin has removed event n° " + eventId + " because of ToS violation.");
@@ -59,8 +50,6 @@ public class AdminController implements AdminApi {
         return new ResponseEntity<>(deletedEvent, HttpStatus.OK);
     }
 
-    @LogMethod
-    @LogExecutionTime
     @Override
     public ResponseEntity<Product> adminDeleteProduct(Long productId) {
         System.out.println("The admin has deleted the product n°" + productId + " because of ToS violation.");

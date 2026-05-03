@@ -1,5 +1,8 @@
 package pl.edu.pwr.tkubik.ism.service;
 
+import pl.edu.pwr.tkubik.ism.aspect.LogExecutionTime;
+import pl.edu.pwr.tkubik.ism.aspect.LogMethod;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +28,8 @@ public class EventCreationServiceImpl implements EventCreationService {
 
     // please note, that here we operate on DTO types (not Entities)
     // please note, that EventCreationDTO has no corresponding Entity
-
+    @LogMethod
+    @LogExecutionTime
     @Override
     public EventCreationDTO addEventCreation(EventCreationDTO ecDTO) {
         Optional<EventEntity> oe = eventRepository.findById(ecDTO.getEventId());
@@ -39,13 +43,17 @@ public class EventCreationServiceImpl implements EventCreationService {
         }
         return null;
     }
-
+    @LogMethod
+    @LogExecutionTime
     @Override
     public EventCreation addCreation(EventCreation creation) {
         // add data in the table "event_creations"
         return eventCreationRepository.save(creation);
     }
 
+
+    @LogMethod
+    @LogExecutionTime
     @Override
     public List<EventCreationDTO> findAllEventCreations() {
         // we get all Entity and mapping into DTO
@@ -57,7 +65,8 @@ public class EventCreationServiceImpl implements EventCreationService {
                         ec.getDateCreation()
                 )).collect(Collectors.toList());
     }
-
+    @LogMethod
+    @LogExecutionTime
     @Override
     public List<OrganizationStatsDTO> getOrganizationEventCounts() {
         // get the SQL response and mapping into DTO
