@@ -192,9 +192,9 @@
 /* --- MAP AREA  --- */
 .map-area {
   flex: 1;
-  position: relative;
+  position: sticky;
   background-color: #D1D5DB;
-  min-height: 100%;
+  height: 100vh;
 }
 
 .map-placeholder {

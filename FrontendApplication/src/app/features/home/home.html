@@ -25,9 +25,9 @@
       </div>
 
       <div class="events-list">
-        @for (event of events; track event.id) {
+        @for (event of (events$ | async); track event.eventId) {
           <article class="event-card">
-            <img [src]="event.imageUrl" [alt]="event.title" class="event-image">
+            <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=150&auto=format&fit=crop" [alt]="event.title" class="event-image">
             <div class="event-info">
 
               <div class="event-header">
@@ -36,11 +36,11 @@
               </div>
 
               <h3 class="title">{{ event.title }}</h3>
-              <p class="organizer">{{ event.organizer }}</p>
+              <p class="organizer">Org: {{ event.organizationName }}</p>
 
               <div class="event-footer">
                 <span class="date"><span class="material-symbols-outlined tiny-icon">calendar_month</span> {{ event.date }}</span>
-                <span class="location"><span class="material-symbols-outlined tiny-icon">location_on</span> {{ event.location }}</span>
+                <span class="location"><span class="material-symbols-outlined tiny-icon">location_on</span> {{ event.address }}</span>
               </div>
 
             </div>
@@ -62,20 +62,20 @@
         <div class="marker" style="top: 47%; left: 51%;"></div>
       </div>
 
-      @if (showCookieBanner) {
-        <div class="cookie-banner">
-          <div class="cookie-content">
-            <h4>We value your privacy</h4>
-            <p>We use cookies to improve your experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.</p>
-          </div>
-          <div class="cookie-actions">
-            <button class="btn-decline" (click)="declineCookies()">Decline</button>
-            <button class="btn-accept" (click)="acceptCookies()">Accept All</button>
-          </div>
-          <button class="btn-close" (click)="declineCookies()"><span class="material-symbols-outlined">close</span></button>
-        </div>
-      }
+
     </section>
 
   </main>
-
+  @if (showCookieBanner) {
+    <div class="cookie-banner">
+      <div class="cookie-content">
+        <h4>We value your privacy</h4>
+        <p>We use cookies to improve your experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.</p>
+      </div>
+      <div class="cookie-actions">
+        <button class="btn-decline" (click)="declineCookies()">Decline</button>
+        <button class="btn-accept" (click)="acceptCookies()">Accept All</button>
+      </div>
+      <button class="btn-close" (click)="declineCookies()"><span class="material-symbols-outlined">close</span></button>
+    </div>
+  }

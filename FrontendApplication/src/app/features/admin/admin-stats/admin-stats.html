@@ -1,0 +1,21 @@
+<div class="container wrapper">
+  <h2>Statistics</h2>
+  <div class="inner">
+  @if (statistics$ | async; as stats) {
+
+      <h3>General statistics</h3>
+      <p>Highest price seen <strong>{{ stats.highestEventPriceRetrieved }} PLN</strong></p>
+
+      <h3>API</h3>
+      <ul>
+        @for (usage of stats.apiUsagePercentages | keyvalue; track usage.key) {
+          <li>
+            <strong>{{ usage.key }}</strong> : {{ usage.value }}%
+          </li>
+        }
+      </ul>
+
+
+  }
+  </div>
+</div>

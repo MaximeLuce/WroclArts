@@ -18,14 +18,14 @@ export class OrganizationFormComponent implements OnInit {
 
   orgId?: number;
 
-  // ✅ strongly typed form
+  // strongly typed form
   form = this.fb.nonNullable.group({
     orgId: [0],
     email: ['', Validators.required],
     nameOrga: ['', Validators.required],
     krsNumber: ['', Validators.required],
     subscriptionDate: ['', Validators.required],
-    // ✅ On définit la valeur par défaut et on désactive le champ pour la création
+    // default value + disabled
     status: [{ value: 'PendingVerification', disabled: true }, Validators.required],
   });
 

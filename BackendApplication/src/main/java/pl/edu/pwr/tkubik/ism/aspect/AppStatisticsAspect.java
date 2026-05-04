@@ -6,9 +6,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import pl.edu.pwr.tkubik.ism.model.Event;
+import pl.edu.pwr.tkubik.ism.model.EventEntity; // Attention, on utilise Entity maintenant !
 import pl.edu.pwr.tkubik.ism.service.StatisticsManager;
 
 import java.util.List;
@@ -20,36 +19,44 @@ public class AppStatisticsAspect {
     @Autowired
     private StatisticsManager statisticsManager;
 
-    // get all methods in 'api' excluding stats
-    @Pointcut("execution(public * pl.edu.pwr.tkubik.ism.api.*.*(..)) && !execution(public * pl.edu.pwr.tkubik.ism.api.StatisticsController.*(..))")
-    public void allApiMethods() {}
+    // we look for ServiceImpl
+    @Pointcut("execution(public * pl.edu.pwr.tkubik.ism.service.*ServiceImpl.*(..))")
+    public void allServiceMethods() {}
 
-    // before, we ++ counter
-    @Before("allApiMethods()")
-    public void countApiUsage(JoinPoint joinPoint) {
+    @Before("allServiceMethods()")
+    public void countServiceUsage(JoinPoint joinPoint) {
         String methodName = joinPoint.getSignature().getName();
+
+        // we avoid StatisticsManager
+        if (methodName.contains("Statistics") || methodName.equals("getHighestEventPrice") || methodName.equals("getMethodUsagePercentages")) {
+            return;
+        }
+
+        System.out.println("DEBUG AOP -> Service intercepté : " + methodName);
         statisticsManager.recordMethodCall(methodName);
     }
 
-    //get findAllEvents
-    //@Pointcut("execution(public * pl.edu.pwr.tkubik.ism.api.EventsController.findAllEvents(..))")
-    //public void findAllEventsMethod() {}
-    @Pointcut("execution(public * pl.edu.pwr.tkubik.ism.api.*Controller.*findAllEvents*(..))")
-    public void findAllEventsMethod() {}
+    // we loook for findAllEvents of EventServiceImpl
+    @Pointcut("execution(public * pl.edu.pwr.tkubik.ism.service.EventServiceImpl.findAllEvents*(..))")
+    public void findAllEventsServiceMethod() {}
 
-    // after, we analyse the result
-    @AfterReturning(pointcut = "findAllEventsMethod()", returning = "responseEntity")
-    public void analyzeEventsData(JoinPoint joinPoint, ResponseEntity<List<Event>> responseEntity) {
-        if (responseEntity != null && responseEntity.getBody() != null) {
-            List<Event> events = responseEntity.getBody();
+    // we get bakc the direct return List<EventEntity>
+    @AfterReturning(pointcut = "findAllEventsServiceMethod()", returning = "result")
+    public void analyzeEventsData(JoinPoint joinPoint, Object result) {
 
-            // we search through events to get the maximum price
-            for (Event event : events) {
-                if (event.getPrice() != null) {
-                    statisticsManager.updateHighestPrice(event.getPrice());
+
+        if (result instanceof List) {
+            List<?> events = (List<?>) result;
+
+            for (Object obj : events) {
+                if (obj instanceof EventEntity) {
+                    EventEntity event = (EventEntity) obj;
+                    if (event.getPrice() != null) {
+                        statisticsManager.updateHighestPrice(event.getPrice());
+                    }
                 }
             }
-            System.out.println("Aspect found ! Analyze of " + events.size() + " events.");
+
         }
     }
 }

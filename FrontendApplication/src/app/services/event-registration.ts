@@ -15,4 +15,9 @@ export class EventRegistrationService {
     // body request {} for the moment ; possible additional infos to be implemented
     return this.http.post<any>(`${this.apiUrl}/${eventId}/tickets`, {});
   }
+
+  unRegisterToEvent(eventId: number): Observable<Event> {
+    // body request {} for the moment ; possible additional infos to be implemented
+    return this.http.delete<any>(`${this.apiUrl}/${eventId}/tickets`, {});
+  }
 }

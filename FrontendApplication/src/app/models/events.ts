@@ -10,6 +10,7 @@ export interface Event {
   title: string;
   type: string;
   isRegistered?: boolean;
+  organizationName?: string;
 }
 
 // ✅ payload used by forms (IMPORTANT FIX)

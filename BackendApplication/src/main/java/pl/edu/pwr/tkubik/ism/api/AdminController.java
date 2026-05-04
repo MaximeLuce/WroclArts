@@ -10,10 +10,24 @@ import pl.edu.pwr.tkubik.ism.model.Event;
 import pl.edu.pwr.tkubik.ism.model.Organization;
 import pl.edu.pwr.tkubik.ism.model.Product;
 
+import pl.edu.pwr.tkubik.ism.service.StatisticsManager;
+import pl.edu.pwr.tkubik.ism.model.SystemStatistics;
+
 import java.util.Optional;
 
 @RestController
 public class AdminController implements AdminApi {
+
+    @Autowired
+    private StatisticsManager statisticsManager;
+
+    @Override
+    public ResponseEntity<SystemStatistics> getSystemStatistics() {
+        SystemStatistics stats = new SystemStatistics();
+        stats.setHighestEventPriceRetrieved(statisticsManager.getHighestEventPrice());
+        stats.setApiUsagePercentages(statisticsManager.getMethodUsagePercentages());
+        return ResponseEntity.ok(stats);
+    }
 
     @Autowired
     private NativeWebRequest nativeWebRequest = null;

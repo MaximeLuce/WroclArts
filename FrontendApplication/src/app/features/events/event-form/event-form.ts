@@ -18,7 +18,7 @@ export class EventFormComponent implements OnInit {
 
   eventId?: number;
 
-  // ✅ strongly typed form
+  // strongly typed form
   form = this.fb.nonNullable.group({
     eventId: [0],
     address: ['', Validators.required],

@@ -5,7 +5,8 @@ import { EventRegistrationComponent } from './features/events/event-registration
 import { OrganizationListComponent } from './features/organizations/organization-list/organization-list';
 import { OrganizationFormComponent } from './features/organizations/organization-form/organization-form';
 import { HomeComponent } from './features/home/home';
-import { AdminComponent } from './features/admin/admin';
+import { AdminComponent } from './features/admin/admin-panel/admin';
+import { AdminStatsComponent } from './features/admin/admin-stats/admin-stats';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -17,5 +18,5 @@ export const routes: Routes = [
   { path: 'admin/listorganizations', component: OrganizationListComponent },
   { path: 'admin/createorganization', component: OrganizationFormComponent },
   { path: 'admin/editorganization/:id', component: OrganizationFormComponent },
-
+  { path: 'admin/statistics', component: AdminStatsComponent }
 ];
